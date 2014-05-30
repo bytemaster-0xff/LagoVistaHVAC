@@ -10,13 +10,13 @@
 Vent::Vent(uint8_t id, GPIO_TypeDef* portIn1, uint16_t pinIn1,
 	GPIO_TypeDef* portIn2, uint16_t pinIn2)
 {
-	m_transitionMS = 250;
+	//m_transitionMS = 250;
 	m_id = id;
 	m_portIn1 = portIn1;
 	m_portIn2 = portIn2;
 
 	m_pinIn1 = pinIn1;
-	m_pinIn2 = pinIn1;
+	m_pinIn2 = pinIn2;
 
 	outputPinState.GPIO_Mode = GPIO_Mode_OUT;
 	outputPinState.GPIO_Speed = GPIO_Speed_50MHz;
@@ -32,7 +32,7 @@ Vent::Vent(uint8_t id, GPIO_TypeDef* portIn1, uint16_t pinIn1,
 
 	m_pTimer = new Timer();
 	m_pTimer->AutoReset = false;
-	m_pTimer->PeriodMS = 100;
+	m_pTimer->PeriodMS = 250;
 	m_pTimer->Callback = new TCEventHandler<Vent>(this, &Vent::TransitionCompleted);
 }
 
@@ -71,12 +71,18 @@ void Vent::Open() {
 }
 
 void Vent::TransitionCompleted() {
-	inputPinState.GPIO_Pin = m_pinIn1;
+	outputPinState.GPIO_Pin = m_pinIn1;
+	GPIO_Init(m_portIn1, &outputPinState);
+	GPIO_WriteBit(m_portIn1, m_pinIn1, Bit_RESET);
+	GPIO_WriteBit(m_portIn2, m_pinIn2, Bit_RESET);
+
+	m_pTimer->Disable();
+	/*inputPinState.GPIO_Pin = m_pinIn1;
 	GPIO_Init(m_portIn1, &inputPinState);
 
 	inputPinState.GPIO_Pin = m_pinIn2;
 	GPIO_Init(m_portIn2, &inputPinState);
-
+	*/
 	if (m_currentState == Opening){
 		m_currentState = Opened;
 		char msg[20];
@@ -98,11 +104,11 @@ void Vent::SetTransitionTime(uint16_t ms){
 void Vent::Close() {
 	outputPinState.GPIO_Pin = m_pinIn1;
 	GPIO_Init(m_portIn1, &outputPinState);
-	GPIO_WriteBit(m_portIn1, m_pinIn1, Bit_RESET);
+	GPIO_WriteBit(m_portIn1, m_pinIn1, Bit_SET);
 
 	outputPinState.GPIO_Pin = m_pinIn2;
 	GPIO_Init(m_portIn2, &outputPinState);
-	GPIO_WriteBit(m_portIn2, m_pinIn2, Bit_SET);
+	GPIO_WriteBit(m_portIn2, m_pinIn2, Bit_RESET);
 
 	m_currentState = Closing;
 	m_pTimer->Enable();

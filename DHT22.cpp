@@ -20,12 +20,16 @@ extern "C" void ReadAllDHT22(){
 }
 
 extern "C" void ReadNextDHT22() {
-	pCurrent = pCurrent->pNext;
-	if (pCurrent != NULL)
-		pCurrent->Update();
-	else
-		Console->Write("ALL DONE");
-
+	if (pCurrent == NULL){
+		Imp->Write("OOPS!");
+	}
+	else{
+		pCurrent = pCurrent->pNext;
+		if (pCurrent != NULL)
+			pCurrent->Update();
+		else
+			Console->Write("ALL DONE");
+	}
 }
  
 extern "C" void DH22HandleTransition(uint32_t pr, uint32_t msk){
