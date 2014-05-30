@@ -6,6 +6,7 @@
 #include "stm32f4xx_tim.h"
 #include "stm32f4xx_syscfg.h"
 #include "ElectricImp.h"
+#include "DebugConsole.h"
 
 #define NULL 0
 
@@ -22,8 +23,11 @@ extern "C" void ReadNextDHT22() {
 	pCurrent = pCurrent->pNext;
 	if (pCurrent != NULL)
 		pCurrent->Update();
-}
+	else
+		Console->Write("ALL DONE");
 
+}
+ 
 extern "C" void DH22HandleTransition(uint32_t pr, uint32_t msk){
 	if (pCurrent != NULL)
 		pCurrent->HandleTransition(pr, msk);
@@ -87,22 +91,25 @@ DHT22::DHT22(uint8_t id, GPIO_TypeDef* port, uint16_t pin, uint32_t extiPin, uin
 
 	m_pTimeoutTimer = new Timer();
 	m_pTimeoutTimer->AutoReset = 0;
-	m_pTimeoutTimer->PeriodMS = 500;
+	m_pTimeoutTimer->PeriodMS = 50;
 	m_pTimeoutTimer->Callback = new TCEventHandler<DHT22>(this, &DHT22::timeout);
 
+	NVIC_InitTypeDef nvicInit;
+	nvicInit.NVIC_IRQChannelPreemptionPriority = 0x00; /* 0 = Highest, 3= Lowest */
+	nvicInit.NVIC_IRQChannelSubPriority = 0;
+	nvicInit.NVIC_IRQChannelCmd = ENABLE;
 
-	EXTI_InitTypeDef extInit;
-	extInit.EXTI_Line = m_extiPin;
-	extInit.EXTI_Mode = EXTI_Mode_Interrupt;
-	extInit.EXTI_LineCmd = ENABLE;
-	extInit.EXTI_Trigger = EXTI_Trigger_Rising_Falling;
-	EXTI_Init(&extInit);
-	SYSCFG_EXTILineConfig(m_portSource, m_pinSource);
+	if (m_pinSource == EXTI_PinSource0) nvicInit.NVIC_IRQChannel = EXTI0_IRQn;
+	if (m_pinSource == EXTI_PinSource1) nvicInit.NVIC_IRQChannel = EXTI1_IRQn;
+	if (m_pinSource == EXTI_PinSource2) nvicInit.NVIC_IRQChannel = EXTI2_IRQn;
+	if (m_pinSource == EXTI_PinSource3) nvicInit.NVIC_IRQChannel = EXTI3_IRQn;
+	if (m_pinSource == EXTI_PinSource4) nvicInit.NVIC_IRQChannel = EXTI4_IRQn;
+	NVIC_Init(&nvicInit);
 
 	if (pHead == NULL)
 		pHead = this;
 	else{
-		DHT22 *pDHT22 = pHead;
+		DHT22 *pDHT22 = pHead; 
 		while (pDHT22->pNext != NULL)
 			pDHT22 = pDHT22->pNext;
 
@@ -121,10 +128,10 @@ void DHT22::timeout(void){
 	GPIO_WriteBit(m_port, m_pin, Bit_SET);
 
 	char msg[30];
-	sprintf(msg, "DHT22,offline,%d,2;", m_id);
+	sprintf(msg, "dht22,%d,offline,3;", m_id);
 	Imp->Write(msg);
 
-//	ReadNextDHT22();
+	ReadNextDHT22();
 }
 
 void DHT22::donePause(void){	
@@ -136,31 +143,23 @@ void DHT22::donePause(void){
 }
 
 void DHT22::enableIRQ(void) {
-	NVIC_InitTypeDef nvicInit;
-	nvicInit.NVIC_IRQChannelPreemptionPriority = 0x00; /* 0 = Highest, 3= Lowest */
-	nvicInit.NVIC_IRQChannelSubPriority = 0;
-	nvicInit.NVIC_IRQChannelCmd = ENABLE;
+	EXTI_InitTypeDef extInit;
+	extInit.EXTI_Line = m_extiPin;
+	extInit.EXTI_Mode = EXTI_Mode_Interrupt;
+	extInit.EXTI_LineCmd = ENABLE;
+	extInit.EXTI_Trigger = EXTI_Trigger_Rising_Falling;
+	EXTI_Init(&extInit);
+	SYSCFG_EXTILineConfig(m_portSource, m_pinSource);
 
-	if (m_pinSource == EXTI_PinSource0) nvicInit.NVIC_IRQChannel = EXTI0_IRQn;
-	if (m_pinSource == EXTI_PinSource1) nvicInit.NVIC_IRQChannel = EXTI1_IRQn;
-	if (m_pinSource == EXTI_PinSource2) nvicInit.NVIC_IRQChannel = EXTI2_IRQn;
-	if (m_pinSource == EXTI_PinSource3) nvicInit.NVIC_IRQChannel = EXTI3_IRQn;
-	if (m_pinSource == EXTI_PinSource4) nvicInit.NVIC_IRQChannel = EXTI4_IRQn;
-	NVIC_Init(&nvicInit);
 }
 
 void DHT22::disableIRQ(void){
-	NVIC_InitTypeDef nvicInit;
-	nvicInit.NVIC_IRQChannelPreemptionPriority = 0x01; /* 0 = Highest, 3= Lowest */
-	nvicInit.NVIC_IRQChannelSubPriority = 1;
-	nvicInit.NVIC_IRQChannelCmd = DISABLE;
-
-	if (m_pinSource == EXTI_PinSource0) nvicInit.NVIC_IRQChannel = EXTI0_IRQn;
-	if (m_pinSource == EXTI_PinSource1) nvicInit.NVIC_IRQChannel = EXTI1_IRQn;
-	if (m_pinSource == EXTI_PinSource2) nvicInit.NVIC_IRQChannel = EXTI2_IRQn;
-	if (m_pinSource == EXTI_PinSource3) nvicInit.NVIC_IRQChannel = EXTI3_IRQn;
-	if (m_pinSource == EXTI_PinSource4) nvicInit.NVIC_IRQChannel = EXTI4_IRQn;
-	NVIC_Init(&nvicInit);
+	EXTI_InitTypeDef extInit;
+	extInit.EXTI_Line = m_extiPin;
+	extInit.EXTI_Mode = EXTI_Mode_Interrupt;
+	extInit.EXTI_LineCmd = DISABLE;
+	extInit.EXTI_Trigger = EXTI_Trigger_Rising_Falling;
+	EXTI_Init(&extInit);
 }
 
 void DHT22::finalizeReading() {
@@ -178,22 +177,24 @@ void DHT22::finalizeReading() {
 		m_errCode = 0;
 		m_isOnline = true;
 	
-		char msg[30];
+		char msg[50];
 		float fTemp = m_temperature / 10.0f;
 		float fHumid = m_humidity / 10.0f;
-		sprintf(msg, "DHT22,ok,%d,%0.1f,%0.1f;", m_id, fTemp, fHumid);
+		sprintf(msg, "dht22,%d,ok,%0.1f,%0.1f;", m_id, fTemp, fHumid);
 		Imp->Write(msg);
 	}
 	else{
 		m_isOnline = false;
 		m_errCode = 2;
 
-		char msg[20];
+		char msg[30];
 		float fTemp = m_temperature / 10.0f;
 		float fHumid = m_humidity / 10.0f;
-		sprintf(msg, "DHT22,err,%d,2;", m_id);
+		sprintf(msg, "dht22,%d,err,2;", m_id);
 		Imp->Write(msg);
 	}
+
+	m_pTimeoutTimer->Disable();
 
 	GPIO_Init(m_port, &m_outputConfig);
 	GPIO_WriteBit(m_port, m_pin, Bit_SET);

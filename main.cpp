@@ -92,7 +92,7 @@ void PowerDevices(){
 
 void CreateActionTimers(){
 	ScanTimer = new Timer();
-	ScanTimer->PeriodMS = 2000;
+	ScanTimer->PeriodMS = 5000;
 	ScanTimer->AutoReset = true;
 	ScanTimer->CallbackC = ReadAllDHT22;
 	ScanTimer->Enable();
