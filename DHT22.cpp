@@ -95,7 +95,7 @@ DHT22::DHT22(uint8_t id, GPIO_TypeDef* port, uint16_t pin, uint32_t extiPin, uin
 
 	m_pTimeoutTimer = new Timer();
 	m_pTimeoutTimer->AutoReset = 0;
-	m_pTimeoutTimer->PeriodMS = 50;
+	m_pTimeoutTimer->PeriodMS = 100;
 	m_pTimeoutTimer->Callback = new TCEventHandler<DHT22>(this, &DHT22::timeout);
 
 	NVIC_InitTypeDef nvicInit;
