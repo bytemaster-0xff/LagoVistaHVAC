@@ -23,7 +23,7 @@ error:
 	$(error Invalid configuration, please check your inputs)
 endif
 
-SOURCEFILES := $(BSP_ROOT)/STM32F4xxxx/CMSIS/Device/ST/STM32F4xx/Source/Templates/system_stm32f4xx.c $(BSP_ROOT)/STM32F4xxxx/Startup/startup_stm32f40xx.c $(BSP_ROOT)/STM32F4xxxx/STM32F4xx_StdPeriph_Driver/src/misc.c $(BSP_ROOT)/STM32F4xxxx/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_adc.c $(BSP_ROOT)/STM32F4xxxx/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_can.c $(BSP_ROOT)/STM32F4xxxx/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_crc.c $(BSP_ROOT)/STM32F4xxxx/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_cryp.c $(BSP_ROOT)/STM32F4xxxx/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_cryp_aes.c $(BSP_ROOT)/STM32F4xxxx/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_cryp_des.c $(BSP_ROOT)/STM32F4xxxx/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_cryp_tdes.c $(BSP_ROOT)/STM32F4xxxx/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_dac.c $(BSP_ROOT)/STM32F4xxxx/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_dbgmcu.c $(BSP_ROOT)/STM32F4xxxx/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_dcmi.c $(BSP_ROOT)/STM32F4xxxx/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_dma.c $(BSP_ROOT)/STM32F4xxxx/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_exti.c $(BSP_ROOT)/STM32F4xxxx/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_flash.c $(BSP_ROOT)/STM32F4xxxx/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_fsmc.c $(BSP_ROOT)/STM32F4xxxx/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_gpio.c $(BSP_ROOT)/STM32F4xxxx/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_hash.c $(BSP_ROOT)/STM32F4xxxx/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_hash_md5.c $(BSP_ROOT)/STM32F4xxxx/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_hash_sha1.c $(BSP_ROOT)/STM32F4xxxx/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_i2c.c $(BSP_ROOT)/STM32F4xxxx/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_iwdg.c $(BSP_ROOT)/STM32F4xxxx/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_pwr.c $(BSP_ROOT)/STM32F4xxxx/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_rcc.c $(BSP_ROOT)/STM32F4xxxx/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_rng.c $(BSP_ROOT)/STM32F4xxxx/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_rtc.c $(BSP_ROOT)/STM32F4xxxx/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_sdio.c $(BSP_ROOT)/STM32F4xxxx/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_spi.c $(BSP_ROOT)/STM32F4xxxx/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_syscfg.c $(BSP_ROOT)/STM32F4xxxx/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_tim.c $(BSP_ROOT)/STM32F4xxxx/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_usart.c $(BSP_ROOT)/STM32F4xxxx/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_wwdg.c Damper.cpp DateTime.cpp DebugConsole.cpp DHT22.cpp ElectricImp.cpp IRQHandlers.cpp main.cpp Timer.cpp Vent.cpp
+SOURCEFILES := AirHandler.cpp $(BSP_ROOT)/STM32F4xxxx/CMSIS/Device/ST/STM32F4xx/Source/Templates/system_stm32f4xx.c $(BSP_ROOT)/STM32F4xxxx/Startup/startup_stm32f40xx.c $(BSP_ROOT)/STM32F4xxxx/STM32F4xx_StdPeriph_Driver/src/misc.c $(BSP_ROOT)/STM32F4xxxx/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_adc.c $(BSP_ROOT)/STM32F4xxxx/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_can.c $(BSP_ROOT)/STM32F4xxxx/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_crc.c $(BSP_ROOT)/STM32F4xxxx/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_cryp.c $(BSP_ROOT)/STM32F4xxxx/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_cryp_aes.c $(BSP_ROOT)/STM32F4xxxx/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_cryp_des.c $(BSP_ROOT)/STM32F4xxxx/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_cryp_tdes.c $(BSP_ROOT)/STM32F4xxxx/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_dac.c $(BSP_ROOT)/STM32F4xxxx/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_dbgmcu.c $(BSP_ROOT)/STM32F4xxxx/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_dcmi.c $(BSP_ROOT)/STM32F4xxxx/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_dma.c $(BSP_ROOT)/STM32F4xxxx/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_exti.c $(BSP_ROOT)/STM32F4xxxx/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_flash.c $(BSP_ROOT)/STM32F4xxxx/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_fsmc.c $(BSP_ROOT)/STM32F4xxxx/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_gpio.c $(BSP_ROOT)/STM32F4xxxx/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_hash.c $(BSP_ROOT)/STM32F4xxxx/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_hash_md5.c $(BSP_ROOT)/STM32F4xxxx/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_hash_sha1.c $(BSP_ROOT)/STM32F4xxxx/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_i2c.c $(BSP_ROOT)/STM32F4xxxx/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_iwdg.c $(BSP_ROOT)/STM32F4xxxx/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_pwr.c $(BSP_ROOT)/STM32F4xxxx/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_rcc.c $(BSP_ROOT)/STM32F4xxxx/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_rng.c $(BSP_ROOT)/STM32F4xxxx/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_rtc.c $(BSP_ROOT)/STM32F4xxxx/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_sdio.c $(BSP_ROOT)/STM32F4xxxx/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_spi.c $(BSP_ROOT)/STM32F4xxxx/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_syscfg.c $(BSP_ROOT)/STM32F4xxxx/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_tim.c $(BSP_ROOT)/STM32F4xxxx/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_usart.c $(BSP_ROOT)/STM32F4xxxx/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_wwdg.c Damper.cpp DateTime.cpp DebugConsole.cpp DHT22.cpp ElectricImp.cpp IRQHandlers.cpp lwip/core/ipv4/autoip.c lwip/core/ipv4/icmp.c lwip/core/ipv4/igmp.c lwip/core/ipv4/inet.c lwip/core/ipv4/inet_chksum.c lwip/core/ipv4/ip.c lwip/core/ipv4/ip_addr.c lwip/core/ipv4/ip_frag.c main.cpp Timer.cpp Vent.cpp
 EXTERNAL_LIBS := 
 EXTERNAL_LIBS_COPIED := $(foreach lib, $(EXTERNAL_LIBS),$(BINARYDIR)/$(notdir $(lib)))
 
@@ -260,5 +260,37 @@ $(BINARYDIR)/stm32f4xx_usart.o : $(BSP_ROOT)/STM32F4xxxx/STM32F4xx_StdPeriph_Dri
 
 
 $(BINARYDIR)/stm32f4xx_wwdg.o : $(BSP_ROOT)/STM32F4xxxx/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_wwdg.c $(all_make_files) |$(BINARYDIR)
+	$(CC) $(CFLAGS) -c $< -o $@ -MD -MF $(@:.o=.dep)
+
+
+$(BINARYDIR)/autoip.o : lwip/core/ipv4/autoip.c $(all_make_files) |$(BINARYDIR)
+	$(CC) $(CFLAGS) -c $< -o $@ -MD -MF $(@:.o=.dep)
+
+
+$(BINARYDIR)/icmp.o : lwip/core/ipv4/icmp.c $(all_make_files) |$(BINARYDIR)
+	$(CC) $(CFLAGS) -c $< -o $@ -MD -MF $(@:.o=.dep)
+
+
+$(BINARYDIR)/igmp.o : lwip/core/ipv4/igmp.c $(all_make_files) |$(BINARYDIR)
+	$(CC) $(CFLAGS) -c $< -o $@ -MD -MF $(@:.o=.dep)
+
+
+$(BINARYDIR)/inet.o : lwip/core/ipv4/inet.c $(all_make_files) |$(BINARYDIR)
+	$(CC) $(CFLAGS) -c $< -o $@ -MD -MF $(@:.o=.dep)
+
+
+$(BINARYDIR)/inet_chksum.o : lwip/core/ipv4/inet_chksum.c $(all_make_files) |$(BINARYDIR)
+	$(CC) $(CFLAGS) -c $< -o $@ -MD -MF $(@:.o=.dep)
+
+
+$(BINARYDIR)/ip.o : lwip/core/ipv4/ip.c $(all_make_files) |$(BINARYDIR)
+	$(CC) $(CFLAGS) -c $< -o $@ -MD -MF $(@:.o=.dep)
+
+
+$(BINARYDIR)/ip_addr.o : lwip/core/ipv4/ip_addr.c $(all_make_files) |$(BINARYDIR)
+	$(CC) $(CFLAGS) -c $< -o $@ -MD -MF $(@:.o=.dep)
+
+
+$(BINARYDIR)/ip_frag.o : lwip/core/ipv4/ip_frag.c $(all_make_files) |$(BINARYDIR)
 	$(CC) $(CFLAGS) -c $< -o $@ -MD -MF $(@:.o=.dep)
 

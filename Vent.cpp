@@ -32,7 +32,7 @@ Vent::Vent(uint8_t id, GPIO_TypeDef* portIn1, uint16_t pinIn1,
 
 	m_pTimer = new Timer();
 	m_pTimer->AutoReset = false;
-	m_pTimer->PeriodMS = 250;
+	m_pTimer->PeriodMS = 500;
 	m_pTimer->Callback = new TCEventHandler<Vent>(this, &Vent::TransitionCompleted);
 }
 

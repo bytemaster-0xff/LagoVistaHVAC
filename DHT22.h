@@ -35,6 +35,10 @@ private:
 	Timer *m_pTimer;
 	Timer *m_pTimeoutTimer;
 
+	uint8_t m_failureCount;
+
+	bool m_enabled;
+
 	GPIO_InitTypeDef m_inputConfig;
 	GPIO_InitTypeDef m_outputConfig;
 
@@ -62,6 +66,12 @@ public:
 	void Update();
 	float GetTemp();
 	float GetHumidity();
+	void ResetFailureCount();
+
+	void SetEnabled(bool enabled);
+	bool GetEnabled();
+
+	int GetFailureCount();
 
 	~DHT22();
 

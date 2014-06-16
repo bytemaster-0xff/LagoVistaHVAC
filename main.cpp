@@ -92,7 +92,7 @@ void PowerDevices(){
 
 void CreateActionTimers(){
 	ScanTimer = new Timer();
-	ScanTimer->PeriodMS = 5000;
+	ScanTimer->PeriodMS = 30000;
 	ScanTimer->AutoReset = true;
 	ScanTimer->CallbackC = ReadAllDHT22;
 	ScanTimer->Enable();
@@ -141,12 +141,12 @@ int main(){
 
 	AH = new AirHandler();
 	
-	Dampers[0] = new Damper(1, GPIOE, GPIO_Pin_12, GPIOE, GPIO_Pin_11);
-	Dampers[1] = new Damper(2, GPIOE, GPIO_Pin_10, GPIOE, GPIO_Pin_9);
-	Dampers[2] = new Damper(3, GPIOE, GPIO_Pin_8, GPIOE, GPIO_Pin_7);
-	Dampers[3] = new Damper(4, GPIOB, GPIO_Pin_2, GPIOB, GPIO_Pin_1);
-	Dampers[4] = new Damper(5, GPIOB, GPIO_Pin_0, GPIOC, GPIO_Pin_5);
-	Dampers[5] = new Damper(6, GPIOA, GPIO_Pin_4, GPIOA, GPIO_Pin_3);
+	Dampers[0] = new Damper(1, GPIOE, GPIO_Pin_11, GPIOE, GPIO_Pin_12);
+	Dampers[1] = new Damper(2, GPIOE, GPIO_Pin_9, GPIOE, GPIO_Pin_10);
+	Dampers[2] = new Damper(3, GPIOE, GPIO_Pin_7, GPIOE, GPIO_Pin_8);
+	Dampers[3] = new Damper(4, GPIOB, GPIO_Pin_1, GPIOB, GPIO_Pin_2);
+	Dampers[4] = new Damper(5, GPIOB, GPIO_Pin_5, GPIOC, GPIO_Pin_0);
+	Dampers[5] = new Damper(6, GPIOA, GPIO_Pin_3, GPIOA, GPIO_Pin_4);
 
 	Vents[0] = new Vent(1, GPIOD, GPIO_Pin_10, GPIOD, GPIO_Pin_11);
 	Vents[1] = new Vent(2, GPIOD, GPIO_Pin_12, GPIOD, GPIO_Pin_13);
@@ -167,6 +167,9 @@ int main(){
 	DHTTempSensors[5] = new DHT22(106, GPIOD, GPIO_Pin_2, EXTI_Line2, EXTI_PinSource2);
 	DHTTempSensors[6] = new DHT22(107, GPIOD, GPIO_Pin_3, EXTI_Line3, EXTI_PinSource3);
 	DHTTempSensors[7] = new DHT22(108, GPIOD, GPIO_Pin_4, EXTI_Line4, EXTI_PinSource4);
+
+	DHTTempSensors[1]->SetEnabled(false);
+	DHTTempSensors[6]->SetEnabled(false);
 
 	GPIO_InitTypeDef GPIO_InitStructure;
 	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_4;

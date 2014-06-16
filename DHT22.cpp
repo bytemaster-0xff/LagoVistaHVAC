@@ -13,7 +13,44 @@
 static DHT22 *pHead = NULL;
 static DHT22 *pCurrent = NULL;
 
+Timer pRebootSensors;
+
+static void RenableDHT22Power(){
+	DHT22 *p;
+
+	p = pHead;
+	while (p != NULL){
+		p->ResetFailureCount();
+		p = p->pNext;
+	}
+
+	GPIO_WriteBit(GPIOA, GPIO_Pin_15, Bit_RESET);
+	pRebootSensors.CallbackC = ReadAllDHT22;
+	pRebootSensors.Enable();
+}
+
+
 extern "C" void ReadAllDHT22(){
+	DHT22 *p;
+
+	p = pHead;
+	while (p != NULL){
+		if (p->GetFailureCount() > 4 && p->GetEnabled() ){
+			GPIO_InitTypeDef GPIO_InitStructure;
+
+			GPIO_WriteBit(GPIOA, GPIO_Pin_15, Bit_SET);
+
+			pRebootSensors.PeriodMS = 5000;
+			pRebootSensors.AutoReset = false;
+			pRebootSensors.CallbackC = RenableDHT22Power;
+			pRebootSensors.Enable();
+			return;
+		}
+		else
+			p = p->pNext;
+	}
+
+
 	pCurrent = pHead;
 	if (pCurrent != NULL)
 		pCurrent->Update();
@@ -47,6 +84,8 @@ DHT22::DHT22(uint8_t id, GPIO_TypeDef* port, uint16_t pin, uint32_t extiPin, uin
 	m_humidity = 0;
 	m_isOnline = 0;
 	pNext = NULL;
+
+	m_enabled = true;
 
 	m_outputConfig.GPIO_Pin = pin;
 	m_outputConfig.GPIO_Mode = GPIO_Mode_OUT;
@@ -110,6 +149,8 @@ DHT22::DHT22(uint8_t id, GPIO_TypeDef* port, uint16_t pin, uint32_t extiPin, uin
 	if (m_pinSource == EXTI_PinSource4) nvicInit.NVIC_IRQChannel = EXTI4_IRQn;
 	NVIC_Init(&nvicInit);
 
+	m_failureCount = 0;
+
 	if (pHead == NULL)
 		pHead = this;
 	else{
@@ -119,6 +160,18 @@ DHT22::DHT22(uint8_t id, GPIO_TypeDef* port, uint16_t pin, uint32_t extiPin, uin
 
 		pDHT22->pNext = this;
 	}
+}
+
+void DHT22::SetEnabled(bool enabled){
+	m_enabled = enabled;
+}
+
+bool DHT22::GetEnabled() {
+	return m_enabled;
+}
+
+void DHT22::ResetFailureCount(){
+	m_failureCount = 0;
 }
 
 void DHT22::timeout(void){
@@ -134,6 +187,8 @@ void DHT22::timeout(void){
 	char msg[30];
 	sprintf(msg, "dht22,%d,offline,3;", m_id);
 	Imp->Write(msg);
+
+	m_failureCount++;
 
 	ReadNextDHT22();
 }
@@ -166,6 +221,10 @@ void DHT22::disableIRQ(void){
 	EXTI_Init(&extInit);
 }
 
+int DHT22::GetFailureCount() {
+	return m_failureCount;
+}
+
 void DHT22::finalizeReading() {
 	disableIRQ();
 
@@ -186,6 +245,7 @@ void DHT22::finalizeReading() {
 		float fHumid = m_humidity / 10.0f;
 		sprintf(msg, "dht22,%d,ok,%0.1f,%0.1f;", m_id, fTemp, fHumid);
 		Imp->Write(msg);
+		m_failureCount = 0;
 	}
 	else{
 		m_isOnline = false;
@@ -196,6 +256,8 @@ void DHT22::finalizeReading() {
 		float fHumid = m_humidity / 10.0f;
 		sprintf(msg, "dht22,%d,err,2;", m_id);
 		Imp->Write(msg);
+
+		m_failureCount++;
 	}
 
 	m_pTimeoutTimer->Disable();

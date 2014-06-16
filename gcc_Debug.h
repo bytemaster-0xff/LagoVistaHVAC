@@ -199,6 +199,7 @@
 #define __SIZE_TYPE__ unsigned int
 #define __UINT64_MAX__ 18446744073709551615ULL
 #define __UDQ_FBIT__ 64
+#define DEBUG 1
 #define __INT8_TYPE__ signed char
 #define __thumb__ 1
 #define __ELF__ 1
@@ -358,10 +359,10 @@
 #define __QQ_IBIT__ 0
 #define __ATOMIC_ACQ_REL 4
 #define __ATOMIC_RELEASE 3
-#define DEBUG 
 #endif
 
 // --- Include directories begin --- //
+//D:/HVAC/HVACLite/HVACLite/LagoVistaHVAC/lwip/include/ipv4
 //C:\Users\Kevin\AppData\Local\VisualGDB\EmbeddedBSPs\arm-eabi\com.sysprogs.arm.stm32/STM32F4xxxx/CMSIS/Device/ST/STM32F4xx/Include
 //C:\Users\Kevin\AppData\Local\VisualGDB\EmbeddedBSPs\arm-eabi\com.sysprogs.arm.stm32/STM32F4xxxx/CMSIS/Include
 //C:\Users\Kevin\AppData\Local\VisualGDB\EmbeddedBSPs\arm-eabi\com.sysprogs.arm.stm32/STM32F4xxxx/CMSIS/RTOS

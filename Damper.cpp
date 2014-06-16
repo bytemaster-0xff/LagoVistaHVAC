@@ -11,7 +11,7 @@
 Damper::Damper(uint8_t id, GPIO_TypeDef* portOpen, uint16_t pinOpen,
 			   GPIO_TypeDef* portClose, uint16_t pinClose){
 	m_id = id;
-	m_transitionMS = 5000;
+	m_transitionMS = 15000;
 	m_portOpen = portOpen;
 	m_portClose = portClose;
 
